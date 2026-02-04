@@ -80,13 +80,13 @@ echo ""
 # Build phases
 echo "Pre-building binaries..."
 cd go && go build -o server server.go && cd ..
-cd java && javac Server.java && cd ..
+cd java && ./graalvm-25/Contents/Home/bin/javac Server.java && ./graalvm-25/Contents/Home/bin/native-image Server && cd ..
 cd rust && cargo build --release && cd ..
 
 run_benchmark "bun" 3000 "bun server.ts" "bun"
 run_benchmark "node" 3001 "node server.js" "node"
 run_benchmark "go" 3002 "./server" "go"
-run_benchmark "java" 3003 "java -Xms16m -Xmx64m -XX:+UseSerialGC Server" "java"
+run_benchmark "java" 3003 "./server" "java"
 run_benchmark "rust" 3004 "./target/release/rust-benchmark" "rust"
 
 echo ""

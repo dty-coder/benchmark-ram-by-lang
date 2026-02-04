@@ -4,13 +4,13 @@ This benchmark suite measures the **Resident Set Size (RSS)** under a significan
 
 ## 📊 10k Load Results
 
-| Runtime     | Tech Stack       | Idle (MB) | Warm (10k) |  Growth   |
-| :---------- | :--------------- | :-------: | :--------: | :-------: |
-| **Rust**    | Actix-web        |   3.38    |    3.38    | **+0.00** |
-| **Go**      | Fiber (fasthttp) |   10.22   |   10.22    | **+0.00** |
-| **Bun**     | Native Bun.serve |   18.08   |   26.25    |   +8.17   |
-| **Node.js** | Fastify          |   58.36   |   54.88    |  -3.48\*  |
-| **Java**    | Optimized JVM    |   43.30   |   80.64    |  +37.34   |
+| Runtime     | Tech Stack           | Idle (MB) | Warm (10k) |  Growth   |
+| :---------- | :------------------- | :-------: | :--------: | :-------: |
+| **Rust**    | Actix-web            |   3.38    |    3.38    | **+0.00** |
+| **Go**      | Fiber (fasthttp)     |   10.11   |   10.11    | **+0.00** |
+| **Java**    | GraalVM Native (v25) |   11.91   |   66.83    |  +54.92   |
+| **Bun**     | Native Bun.serve     |   23.30   |   30.36    |   +7.06   |
+| **Node.js** | Fastify              |   58.20   |   54.56    |  -3.64\*  |
 
 _\*Node.js growth is negative due to Garbage Collection (GC) triggering immediately after the load test._
 
@@ -22,7 +22,7 @@ Each runtime was configured using its most performance-oriented, production-read
 - **Node.js**: Uses **`Fastify`**. The industry benchmark for Node performance, utilizing Radix Tree routing and JIT-compiled JSON schema validation.
 - **Go**: Uses **`Fiber`** (powered by `fasthttp`). It minimizes memory allocations by reusing Request/Response buffers, making it nearly "zero-allocation" under load.
 - **Rust**: Uses **`Actix-web`**. A high-performance actor-based framework that consistently ranks at the top of world-wide benchmarks due to Rust's lack of GC.
-- **Java**: Uses the **Built-in HTTP Server with a `FixedThreadPool`**. Tuned with `-XX:+UseSerialGC` and limited heap (`-Xmx64m`) to minimize the typical JVM memory footprint.
+- **Java**: Uses the **Built-in HTTP Server with a `FixedThreadPool`**, compiled into a **GraalVM Native Image (Oracle GraalVM 25)**. This eliminates JVM overhead by performing Ahead-of-Time (AOT) compilation, offering Go/Rust-like memory efficiency.
 
 ## 🧪 Methodology (10k Load)
 

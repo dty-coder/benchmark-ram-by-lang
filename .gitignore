@@ -8,6 +8,8 @@ target/
 *.exe
 *.out
 *.class
+java/graalvm-25/
+
 
 # Logs and benchmark data
 results/*.log
