@@ -29,8 +29,8 @@ public class Server {
             }
         });
 
-        // Use a fixed thread pool for better efficiency
-        server.setExecutor(Executors.newFixedThreadPool(10));
+        // Use Virtual Threads for maximum efficiency (Project Loom)
+        server.setExecutor(Executors.newVirtualThreadPerTaskExecutor());
         server.start();
 
         String pid = ManagementFactory.getRuntimeMXBean().getName().split("@")[0];

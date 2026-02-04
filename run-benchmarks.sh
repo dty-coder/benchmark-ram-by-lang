@@ -79,15 +79,35 @@ echo ""
 
 # Build phases
 echo "Pre-building binaries..."
-cd go && go build -o server server.go && cd ..
-cd java && ./graalvm-25/Contents/Home/bin/javac Server.java && ./graalvm-25/Contents/Home/bin/native-image Server && cd ..
-cd rust && cargo build --release && cd ..
+
+measure_build() {
+    local runtime=$1
+    local cmd=$2
+    echo "Building $runtime..."
+    start_time=$(date +%s%N)
+    eval "$cmd"
+    end_time=$(date +%s%N)
+    # Duration in milliseconds
+    duration=$(( (end_time - start_time) / 1000000 ))
+    echo "$duration" > "results/${runtime}_build_time.txt"
+    echo "Built $runtime in ${duration}ms"
+}
+
+measure_build "go" "(cd go && go build -o server server.go)"
+measure_build "java" "(cd java && ./graalvm-25/Contents/Home/bin/javac Server.java && ./graalvm-25/Contents/Home/bin/native-image Server)"
+measure_build "rust" "(cd rust && cargo build --release)"
+measure_build "zig" "(cd zig && zig build-exe server.zig -O ReleaseSmall)"
+
+# For interpreted/JIT runtimes, build time is 0 or minimal
+echo "0" > results/bun_build_time.txt
+echo "0" > results/node_build_time.txt
 
 run_benchmark "bun" 3000 "bun server.ts" "bun"
 run_benchmark "node" 3001 "node server.js" "node"
 run_benchmark "go" 3002 "./server" "go"
 run_benchmark "java" 3003 "./server" "java"
 run_benchmark "rust" 3004 "./target/release/rust-benchmark" "rust"
+run_benchmark "zig" 3005 "./server" "zig"
 
 echo ""
 echo "=== Benchmark Complete ==="

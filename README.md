@@ -2,27 +2,25 @@
 
 This benchmark suite measures the **Resident Set Size (RSS)** under a significant load of **10,000 concurrent requests** (Keep-Alive) to simulate a "Prime" production state.
 
-## 📊 10k Load Results
+## 📊 10k Load Results (Final Optimized)
 
-| Runtime     | Tech Stack           | Idle (MB) | Warm (10k) |  Growth   |
-| :---------- | :------------------- | :-------: | :--------: | :-------: |
-| **Rust**    | Actix-web            |   3.38    |    3.38    | **+0.00** |
-| **Go**      | Fiber (fasthttp)     |   10.11   |   10.11    | **+0.00** |
-| **Java**    | GraalVM Native (v25) |   11.91   |   66.83    |  +54.92   |
-| **Bun**     | Native Bun.serve     |   23.30   |   30.36    |   +7.06   |
-| **Node.js** | Fastify              |   58.20   |   54.56    |  -3.64\*  |
+| Runtime           | Tech Stack           | Idle (MB) | Warm (10k) |  Growth   | Compile Time |
+| :---------------- | :------------------- | :-------: | :--------: | :-------: | :----------: |
+| **Zig**           | Native std.net       | **0.56**  |  **0.56**  | **+0.00** |    467ms     |
+| **Rust**          | Actix-web (LTO)      |   2.66    |    2.66    | **+0.00** |    387ms     |
+| **Go**            | Fiber (fasthttp)     |   10.12   |   10.12    | **+0.00** |    342ms     |
+| **Java (Native)** | GraalVM + Virtual Th |   11.95   |   65.52    |  +53.57   |    43.46s    |
+| **Bun**           | Native Bun.serve     |   23.33   |   30.28    |   +6.95   |     N/A      |
+| **Node.js**       | Native http          |   41.00   |   41.00    | **+0.00** |     N/A      |
 
-_\*Node.js growth is negative due to Garbage Collection (GC) triggering immediately after the load test._
+## 🛠 Tech Stack (The "Ultimate" Setup)
 
-## 🛠 Tech Stack (The "Prime" Setup)
-
-Each runtime was configured using its most performance-oriented, production-ready components:
-
-- **Bun**: Uses **Native `Bun.serve`**. Written in Zig, it bypasses Node compatibility layers to communicate directly with the JavaScriptCore engine.
-- **Node.js**: Uses **`Fastify`**. The industry benchmark for Node performance, utilizing Radix Tree routing and JIT-compiled JSON schema validation.
-- **Go**: Uses **`Fiber`** (powered by `fasthttp`). It minimizes memory allocations by reusing Request/Response buffers, making it nearly "zero-allocation" under load.
-- **Rust**: Uses **`Actix-web`**. A high-performance actor-based framework that consistently ranks at the top of world-wide benchmarks due to Rust's lack of GC.
-- **Java**: Uses the **Built-in HTTP Server with a `FixedThreadPool`**, compiled into a **GraalVM Native Image (Oracle GraalVM 25)**. This eliminates JVM overhead by performing Ahead-of-Time (AOT) compilation, offering Go/Rust-like memory efficiency.
+- **Zig**: Uses **Native `std.net`**. No extra memory allocations per request, resulting in the lowest footprint ever recorded in this suite.
+- **Rust**: Uses **Actix-web** with a specialized release profile (**LTO**, `opt-level = "z"`, and `panic = "abort"`).
+- **Go**: Uses **Fiber** with minimal config. Extremely competitive in build speed and memory.
+- **Java**: Compiled to **GraalVM Native Image (v25)** and uses **Virtual Threads** (Project Loom). While idle memory is low, heap growth under load remains a JVM characteristic.
+- **Bun**: Uses native `Bun.serve` (Zig-based). The most efficient JS-based runtime.
+- **Node.js**: Switched to **Native `http`** module to eliminate framework overhead, reducing RAM from ~58MB to 41MB.
 
 ## 🧪 Methodology (10k Load)
 

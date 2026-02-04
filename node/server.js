@@ -1,22 +1,17 @@
-// Node.js Fastify Benchmark (Prime State)
-const fastify = require('fastify')({ logger: false });
+// Node.js Native HTTP Benchmark (Minimalist)
+const http = require('http');
 
-fastify.get('/', async (request, reply) => {
-  return {
-    message: 'Hello from Node.js (Fastify)',
+const server = http.createServer((req, res) => {
+  res.writeHead(200, { 'Content-Type': 'application/json' });
+  res.end(JSON.stringify({
+    message: 'Hello from Node.js (Native)',
     timestamp: Date.now()
-  };
+  }));
 });
 
-const start = async () => {
-  try {
-    await fastify.listen({ port: 3001, host: '0.0.0.0' });
-    console.log(`Node.js (Fastify) running on http://localhost:3001`);
-    console.log(`PID: ${process.pid}`);
-  } catch (err) {
-    console.error(err);
-    process.exit(1);
-  }
-};
+const PORT = 3001;
+server.listen(PORT, '0.0.0.0', () => {
+  console.log(`Node.js (Native) running on http://localhost:${PORT}`);
+  console.log(`PID: ${process.pid}`);
+});
 
-start();
