@@ -12,7 +12,6 @@ This benchmark suite measures the **Resident Set Size (RSS)** under a significan
 | **Java (Native)** | GraalVM + Virtual Th |   11.83   |   65.67    |  +53.84   |    42.68s    |
 | **Bun**           | Native Bun.serve     |   23.25   |   30.28    |   +7.03   |     N/A      |
 | **Node.js**       | Native http          |   41.11   |   41.11    | **+0.00** |     N/A      |
-| **PHP**           | FrankenPHP (Worker)  |   80.30   |   94.14    |  +13.84   |     N/A      |
 
 ## 🛠 Tech Stack (The "Ultimate" Setup)
 
@@ -22,7 +21,6 @@ This benchmark suite measures the **Resident Set Size (RSS)** under a significan
 - **Java**: Compiled to **GraalVM Native Image (v25)** and uses **Virtual Threads** (Project Loom). While idle memory is low, heap growth under load remains a JVM characteristic.
 - **Bun**: Uses native `Bun.serve` (Zig-based). The most efficient JS-based runtime.
 - **Node.js**: Switched to **Native `http`** module to eliminate framework overhead, reducing RAM from ~58MB to 41MB.
-- **PHP**: Runs on **FrankenPHP** in **Worker Mode**. This is the highest performance setup for PHP, keeping the app in memory across requests.
 
 ## 🚀 Detailed Optimizations
 
