@@ -1,0 +1,19 @@
+# Binaries and build artifacts
+node_modules/
+dist/
+results/
+server
+target/
+*.log
+*.exe
+*.out
+*.class
+
+# Logs and benchmark data
+results/*.log
+results/*.txt
+results/*.png
+results/*.webp
+
+# OS junk
+.DS_Store
