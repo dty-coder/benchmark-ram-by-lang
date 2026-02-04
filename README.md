@@ -22,6 +22,32 @@ This benchmark suite measures the **Resident Set Size (RSS)** under a significan
 - **Bun**: Uses native `Bun.serve` (Zig-based). The most efficient JS-based runtime.
 - **Node.js**: Switched to **Native `http`** module to eliminate framework overhead, reducing RAM from ~58MB to 41MB.
 
+## 🚀 Detailed Optimizations
+
+### 1. Zig (Champion)
+
+- **Zero-Allocation**: No memory is allocated on the heap during the request/response cycle.
+- **ReleaseSmall**: Compiled with `-O ReleaseSmall` to prioritize binary size and runtime efficiency.
+
+### 2. Rust (System Precision)
+
+- **LTO (Link Time Optimization)**: Optimizes across crate boundaries, removing unused code and inlining functions more aggressively.
+- **Codegen Units = 1**: Ensures maximum optimization at the cost of slower build times.
+- **Panic Abort**: Removes the overhead of stack unwinding code.
+
+### 3. Java (Native Transformation)
+
+- **GraalVM 25**: Uses the latest AOT compiler to convert bytecode to a standalone native binary.
+- **Virtual Threads (Loom)**: Replaces heavy OS-level threads with lightweight virtual threads, reducing the per-connection memory overhead.
+
+### 4. Go (Pool Efficiency)
+
+- **fiber.Config**: Tuned to disable unnecessary features. Go survives high load due to its advanced internal memory pooling (fasthttp).
+
+### 5. Node.js (Framework Removal)
+
+- **Native HTTP**: By removing Fastify, we bypassed the entire middleware stack and routing engine, revealing Node's true base performance.
+
 ## 🧪 Methodology (10k Load)
 
 1.  **High-Precision Tracking**: PIDs are extracted via `lsof -ti :port` to target only the actual binary/runtime.
