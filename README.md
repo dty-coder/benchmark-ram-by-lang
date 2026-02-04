@@ -6,12 +6,13 @@ This benchmark suite measures the **Resident Set Size (RSS)** under a significan
 
 | Runtime           | Tech Stack           | Idle (MB) | Warm (10k) |  Growth   | Compile Time |
 | :---------------- | :------------------- | :-------: | :--------: | :-------: | :----------: |
-| **Zig**           | Native std.net       | **0.56**  |  **0.56**  | **+0.00** |    467ms     |
-| **Rust**          | Actix-web (LTO)      |   2.66    |    2.66    | **+0.00** |    387ms     |
-| **Go**            | Fiber (fasthttp)     |   10.12   |   10.12    | **+0.00** |    342ms     |
-| **Java (Native)** | GraalVM + Virtual Th |   11.95   |   65.52    |  +53.57   |    43.46s    |
-| **Bun**           | Native Bun.serve     |   23.33   |   30.28    |   +6.95   |     N/A      |
-| **Node.js**       | Native http          |   41.00   |   41.00    | **+0.00** |     N/A      |
+| **Zig**           | Native std.net       | **1.19**  |  **1.19**  | **+0.00** |    489ms     |
+| **Rust**          | Actix-web (LTO)      |   2.66    |    2.66    | **+0.00** |    450ms     |
+| **Go**            | Fiber (fasthttp)     |   10.11   |   10.11    | **+0.00** |    321ms     |
+| **Java (Native)** | GraalVM + Virtual Th |   11.83   |   65.67    |  +53.84   |    42.68s    |
+| **Bun**           | Native Bun.serve     |   23.25   |   30.28    |   +7.03   |     N/A      |
+| **Node.js**       | Native http          |   41.11   |   41.11    | **+0.00** |     N/A      |
+| **PHP**           | FrankenPHP (Worker)  |   80.30   |   94.14    |  +13.84   |     N/A      |
 
 ## 🛠 Tech Stack (The "Ultimate" Setup)
 
@@ -21,6 +22,7 @@ This benchmark suite measures the **Resident Set Size (RSS)** under a significan
 - **Java**: Compiled to **GraalVM Native Image (v25)** and uses **Virtual Threads** (Project Loom). While idle memory is low, heap growth under load remains a JVM characteristic.
 - **Bun**: Uses native `Bun.serve` (Zig-based). The most efficient JS-based runtime.
 - **Node.js**: Switched to **Native `http`** module to eliminate framework overhead, reducing RAM from ~58MB to 41MB.
+- **PHP**: Runs on **FrankenPHP** in **Worker Mode**. This is the highest performance setup for PHP, keeping the app in memory across requests.
 
 ## 🚀 Detailed Optimizations
 

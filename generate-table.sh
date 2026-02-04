@@ -7,7 +7,7 @@ echo ""
 echo "| Runtime | Idle Memory (MB) | Warm Memory (MB) | Memory Growth | Compile Time |"
 echo "|---------|------------------|------------------|---------------|--------------|"
 
-for runtime in zig rust go java bun node; do
+for runtime in zig rust go java bun node php; do
     if [ -f "results/${runtime}_summary.txt" ]; then
         data=$(cat "results/${runtime}_summary.txt")
         idle=$(echo $data | cut -d',' -f1)
@@ -37,6 +37,7 @@ for runtime in zig rust go java bun node; do
             "java") name="Java (Native)" ;;
             "rust") name="Rust" ;;
             "zig") name="Zig" ;;
+            "php") name="PHP (FrankenPHP)" ;;
         esac
         
         echo "| $name | $idle | $warm | +$growth | $build_time |"

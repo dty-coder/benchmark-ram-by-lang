@@ -98,6 +98,10 @@ measure_build "java" "(cd java && ./graalvm-25/Contents/Home/bin/javac Server.ja
 measure_build "rust" "(cd rust && cargo build --release)"
 measure_build "zig" "(cd zig && zig build-exe server.zig -O ReleaseSmall)"
 
+# PHP does not have a "build" phase in the traditional sense, but we'll note FrankenPHP setup
+echo "0" > results/php_build_time.txt
+echo "Built php in 0ms"
+
 # For interpreted/JIT runtimes, build time is 0 or minimal
 echo "0" > results/bun_build_time.txt
 echo "0" > results/node_build_time.txt
@@ -108,6 +112,7 @@ run_benchmark "go" 3002 "./server" "go"
 run_benchmark "java" 3003 "./server" "java"
 run_benchmark "rust" 3004 "./target/release/rust-benchmark" "rust"
 run_benchmark "zig" 3005 "./server" "zig"
+run_benchmark "php" 3006 "./frankenphp php-server --worker server.php --listen :3006" "php"
 
 echo ""
 echo "=== Benchmark Complete ==="
